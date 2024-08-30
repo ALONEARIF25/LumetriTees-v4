@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>alonearif | Coupon Code Checker</title>
+
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #2c2c2c;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .result-container {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #333;
+      display: none;
+      border-radius: 10px;
+    }
+
+    .result-text {
+      margin: 0;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Coupon Code Checker</h1>
+
+    <form id="submission-form">
+      <div class="form-group">
+        <label for="coupon-code">Coupon Code:</label>
+        <input type="text" id="coupon-code" name="coupon-code" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <button class="submit-btn" type="submit">Submit</button>
+    </form>
+
+    <div class="result-container" id="result-container">
+      <h2>Valid Submissions:</h2>
+      <div class="valid-submissions" id="valid-submissions"></div>
+    </div>
+
+<div class="reset-container" style="padding-top: 10px;">
+  <button class="reset-btn" onclick="promptPassword()" style="display: block; width: 100%; padding: 10px; background-color: #2c2c2c; border: none; border-radius: 5px; color: #fff; font-weight: bold; cursor: pointer;">Reset</button>
+</div>
+
+
+  <script>
+    var validEmail = 'alonearif@gmail.com';
+    var maxUsageCount = 5;
+    var usageCounts = JSON.parse(localStorage.getItem('usageCounts')) || {};
+
+    document.getElementById('submission-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var couponCodeInput = document.getElementById('coupon-code');
+      var emailInput = document.getElementById('email');
+
+      var enteredCode = couponCodeInput.value;
+      var enteredEmail = emailInput.value;
+
+      if (enteredCode in usageCounts && usageCounts[enteredCode] >= maxUsageCount) {
+        alert('Coupon code usage limit exceeded!');
+        return;
+      }
+
+      if (enteredEmail === validEmail) {
+        var remainingAttempts = maxUsageCount - (usageCounts[validEmail] || 0);
+        
+        if (remainingAttempts <= 0) {
+          alert('Maximum usage limit for the email exceeded!');
+          return;
+        }
+
+        if (!(enteredCode in usageCounts)) {
+          usageCounts[enteredCode] = 1;
+        } else {
+          usageCounts[enteredCode]++;
+        }
+
+        var discount = getRandomDiscount();
+        var threeChars = generateRandomChars(3);
+
+        var finalCouponCode = enteredCode + discount + threeChars;
+        var resultText = 'Valid coupon code: ' + finalCouponCode + '. You can use it for your purchase!';
+
+        var submissionContainer = document.createElement('div');
+        submissionContainer.className = 'valid-submission';
+        submissionContainer.textContent = resultText;
+
+        document.getElementById('valid-submissions').appendChild(submissionContainer);
+        document.getElementById('result-container').style.display = 'block';
+
+        couponCodeInput.value = '';
+        emailInput.value = '';
+
+        if (usageCounts[validEmail]) {
+          usageCounts[validEmail]++;
+        } else {
+          usageCounts[validEmail] = 1;
+        }
+
+        remainingAttempts = maxUsageCount - usageCounts[validEmail];
+        alert('Valid coupon code. Remaining attempts: ' + remainingAttempts);
+      } else {
+        alert('Invalid coupon code or email!');
+      }
+
+      // Store the usageCounts in localStorage
+      localStorage.setItem('usageCounts', JSON.stringify(usageCounts));
+    });
+
+    function getRandomDiscount() {
+      var randomNumber = Math.random();
+      var discount;
+
+      if (randomNumber <= 0.8) {
+        // 80% cases: 1% - 10% discount
+        discount = getRandomPercentage(1, 10);
+      } else if (randomNumber <= 0.95) {
+        // 15% cases: 11% - 15% discount
+        discount = getRandomPercentage(11, 15);
+      } else {
+        // 5% cases: 16% - 20% discount
+        discount = getRandomPercentage(16, 20);
+      }
+
+      return discount + '%';
+    }
+
+    function getRandomPercentage(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generateRandomChars(length) {
+      var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+      var result = '';
+      for (var i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+
+    function promptPassword() {
+  var password = prompt("Enter the password to reset the data:");
+  if (password === "0172495840101736408760") {
+    resetData();
+  } else {
+    alert("Invalid password. Reset aborted.");
+  }
+}
+
+function resetData() {
+  localStorage.removeItem('usageCounts');
+  usageCounts = {};
+  document.getElementById('valid-submissions').innerHTML = '';
+  document.getElementById('check-codes-result').textContent = '';
+}
+
+  </script>
+
+
+
+
+</body>
+
+
+</html>

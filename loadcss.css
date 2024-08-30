@@ -1,0 +1,27 @@
+/* File: loadcss.css */
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #000; /* Set the background color to black */
+  font-family: 'Comfortaa', cursive; /* Use the Comfortaa font */
+  color: #fff; /* Set the text color to white */
+}
+
+#loadingScreen {
+  /* Loading screen styles */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000; /* Set the loading screen background color to black */
+  color: #fff; /* Set the loading screen text color to white */
+  font-size: 24px; /* Adjust the loading screen text size */
+}
